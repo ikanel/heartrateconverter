@@ -6,6 +6,10 @@
  */
 
 #include "BLEDevice.h"
+#include "ssd1306.h"
+
+ 
+
 //#include "BLEScan.h"
 
 // The remote service we wish to connect to.
@@ -168,6 +172,7 @@ void setup() {
   pBLEScan->setActiveScan(true);
   pBLEScan->start(5, false);
   setupTimer();
+  testLCD();
 }  // End of setup.
 
 // This is the Arduino main loop function.
@@ -242,4 +247,34 @@ void setupTimer() {
   // Set alarm to call onTimer function every second (value in microseconds).
   // Repeat the alarm (third parameter) with unlimited count = 0 (fourth parameter).
   timerAlarm(timer, timer_restart_interval, true, 0);
+}
+
+
+void testLCD()
+{
+  //See full example here
+   /* Select the font to use with menu and all font functions */
+    ssd1306_setFixedFont(ssd1306xled_font6x8);
+    
+    ssd1306_128x64_i2c_init();
+//    ssd1306_128x64_spi_init(-1, 0, 1);  // Use this line for nano pi (RST not used, 0=CE, gpio1=D/C)
+//    ssd1306_128x64_spi_init(3,4,5);     // Use this line for Atmega328p (3=RST, 4=CE, 5=D/C)
+//    ssd1306_128x64_spi_init(24, 0, 23); // Use this line for Raspberry  (gpio24=RST, 0=CE, gpio23=D/C)
+//    ssd1306_128x64_spi_init(22, 5, 21); // Use this line for ESP32 (VSPI)  (gpio22=RST, gpio5=CE for VSPI, gpio21=D/C)
+//    composite_video_128x64_mono_init(); // Use this line for ESP32 with Composite video support
+
+    ssd1306_clearScreen();
+    SAppMenu menu;
+
+    const char *menuItems[] =
+    {
+        "search sensor",
+        "bind to last used",
+        "return"
+    };
+
+
+    ssd1306_createMenu( &menu, menuItems, sizeof(menuItems) / sizeof(char *) );
+    ssd1306_showMenu( &menu );
+
 }
